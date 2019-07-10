@@ -40,7 +40,7 @@ public class TemplatesTable extends JBTable {
     public TemplatesTable(Map<String, String> model) {
         setStriped(true);
         setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
-        settings = new LinkedList<Entry<String, String>>();
+        settings = new LinkedList<>();
         CollectionUtils.addAll(settings, model.entrySet().toArray(new Entry[model.entrySet().size()]));
         setModel(new TableModel());
         Enumeration<TableColumn> columns = getColumnModel().getColumns();
@@ -98,9 +98,9 @@ public class TemplatesTable extends JBTable {
          * Instantiates a new Table model.
          */
         public TableModel() {
-            columnNames = new LinkedList<String>();
-            columnNames.add("Regular expression");
-            columnNames.add("Preview");
+            columnNames = new LinkedList<>();
+            columnNames.add("正则表达式");
+            columnNames.add("模板内容");
         }
 
         @Override

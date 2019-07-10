@@ -1,10 +1,15 @@
-intellij-javadocs
+intellij-javadocs2
 ============
 
-Intellij idea javadocs generator plugin.
+Intellij plugin Javadocs 中文增强版
+因为原有插件很久不维护了，已经不适应新版本Intellij idea，所以对插件进行了修改，并进行了汉化。
+同时增加了增强功能，比如支持接口元素
 
-Home page: http://setial.github.com/intellij-javadocs/
+使用教程 https://github.com/freedommedal/idea-javadocs2/wiki
 
-Wiki: https://github.com/setial/intellij-javadocs/wiki
+Intellij plugin Javadocs the Chinese language enhanced version
 
-Last plugin deployment jar: https://github.com/setial/intellij-javadocs/raw/master/ideajavadocs.zip
+Fork http://setial.github.com/intellij-javadocs/ 
+
+Thanks to the original author。
+

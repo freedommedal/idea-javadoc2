@@ -7,24 +7,17 @@ import com.github.setial.intellijjavadocs.model.settings.Level;
 import com.github.setial.intellijjavadocs.model.settings.Mode;
 import com.github.setial.intellijjavadocs.model.settings.Visibility;
 import com.github.setial.intellijjavadocs.template.DocTemplateManager;
-import com.github.setial.intellijjavadocs.ui.settings.ConfigPanel;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
-import org.jdom.Element;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.JComponent;
 import java.util.HashSet;
 import java.util.Set;
+import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The type Java doc configuration impl.
@@ -32,21 +25,15 @@ import java.util.Set;
  * @author Sergey Timofiychuk
  */
 @State(
-        name = JavaDocConfiguration.COMPONENT_NAME,
-        storages = {
-                @Storage(
-                        id = "other",
-                        file = StoragePathMacros.APP_CONFIG + "/intellij-javadocs.xml"
-                )
-        }
+    name = JavaDocConfiguration.COMPONENT_NAME,
+    storages = @Storage("intellij-javadocs2.xml")
 )
-public class JavaDocConfigurationImpl implements JavaDocConfiguration, Configurable,
-        PersistentStateComponent<Element> {
+public class JavaDocConfigurationImpl implements JavaDocConfiguration,
+    PersistentStateComponent<Element> {
 
     private static final Logger LOGGER = Logger.getInstance(JavaDocConfigurationImpl.class);
 
     private JavaDocSettings settings;
-    private ConfigPanel configPanel;
     private DocTemplateManager templateManager;
     private boolean loadedStoredConfig = false;
 
@@ -57,69 +44,17 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration, Configura
         templateManager = ServiceManager.getService(DocTemplateManager.class);
     }
 
-    @Override
-    public void initComponent() {
-    }
-
-    @Override
-    public void disposeComponent() {
-    }
-
-    @Nls
-    @Override
-    public String getDisplayName() {
-        return "JavaDoc";
-    }
-
-    @Nullable
-    @Override
-    public String getHelpTopic() {
-        return null;
-    }
-
     @NotNull
     @Override
     public String getComponentName() {
         return COMPONENT_NAME;
     }
 
-    @Nullable
-    @Override
-    public JComponent createComponent() {
-        if (configPanel == null) {
-            configPanel = new ConfigPanel(getSettings());
-        }
-        reset();
-        return configPanel;
-    }
-
-    @Override
-    public boolean isModified() {
-        return configPanel.isModified();
-    }
-
-    @Override
-    public void apply() throws ConfigurationException {
-        configPanel.apply();
-        setupTemplates();
-    }
-
-    @Override
-    public void reset() {
-        configPanel.reset();
-    }
-
-    @Override
-    public void disposeUIResources() {
-        configPanel.disposeUIResources();
-        configPanel = null;
-    }
-
     @Override
     public JavaDocSettings getConfiguration() {
         JavaDocSettings result;
         try {
-            result = (JavaDocSettings) getSettings().clone();
+            result = (JavaDocSettings)getSettings().clone();
         } catch (Exception e) {
             // return null if cannot clone object
             result = null;
@@ -139,22 +74,23 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration, Configura
     }
 
     @Override
-    public void loadState(Element javaDocSettings) {
+    public void loadState(@NotNull Element javaDocSettings) {
         settings = new JavaDocSettings(javaDocSettings);
         setupTemplates();
         loadedStoredConfig = true;
     }
 
-    private JavaDocSettings getSettings() {
+    @Override
+    public JavaDocSettings getSettings() {
         if (!loadedStoredConfig) {
             // setup default values
             settings = new JavaDocSettings();
-            Set<Level> levels = new HashSet<Level>();
+            Set<Level> levels = new HashSet<>();
             levels.add(Level.TYPE);
             levels.add(Level.METHOD);
             levels.add(Level.FIELD);
 
-            Set<Visibility> visibilities = new HashSet<Visibility>();
+            Set<Visibility> visibilities = new HashSet<>();
             visibilities.add(Visibility.PUBLIC);
             visibilities.add(Visibility.PROTECTED);
             visibilities.add(Visibility.DEFAULT);
@@ -173,7 +109,8 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration, Configura
         return settings;
     }
 
-    private void setupTemplates() {
+    @Override
+    public void setupTemplates() {
         try {
             templateManager.setClassTemplates(settings.getTemplateSettings().getClassTemplates());
             templateManager.setConstructorTemplates(settings.getTemplateSettings().getConstructorTemplates());

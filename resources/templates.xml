@@ -1,267 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-
     <class>
+        <template regexp="^.*(public|protected|private)*.+interface\s+\w+.*">/**\n
+ * ${name}\n
+&lt;#if element.typeParameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.typeParameters as typeParameter&gt;
+ * @param &lt;${typeParameter.name}&gt; parameter\n
+&lt;/#list&gt;
+ */</template>
 
-        <template regexp="^.*(public|protected|private)*.+interface\s+\w+.*">
-/**\n
- * The interface ${name}.\n
-    &lt;#if element.typeParameters?has_content&gt;
-        * \n
-    &lt;/#if&gt;
+        <template regexp="^.*(public|protected|private)*.+enum\s+\w+.*">/**\n
+ * ${name}\n
+ */</template>
 
-    &lt;#list element.typeParameters as typeParameter&gt;
+        <template regexp="^.*(public|protected|private)*.+class\s+\w+.*">/**\n
+ * ${name}\n
+&lt;#if element.typeParameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.typeParameters as typeParameter&gt;
+ * @param &lt;${typeParameter.name}&gt; parameter\n
+&lt;/#list&gt;
+ */</template>
 
-        * @param &lt;${typeParameter.name}&gt; the type parameter\n
-    &lt;/#list&gt;
-
- */
-        </template>
-
-        <template regexp="^.*(public|protected|private)*.+enum\s+\w+.*">
-/**\n
- * The enum ${name}.\n
- */
-        </template>
-
-        <template regexp="^.*(public|protected|private)*.+class\s+\w+.*">
-/**\n
- * The type ${name}.\n
-    &lt;#if element.typeParameters?has_content&gt;
-        * \n
-    &lt;/#if&gt;
-
-    &lt;#list element.typeParameters as typeParameter&gt;
-
-        * @param &lt;${typeParameter.name}&gt; the type parameter\n
-    &lt;/#list&gt;
-
- */
-        </template>
-
-        <template regexp=".+">
-/**\n
- * The type ${name}.\n
- */
-        </template>
-
+        <template regexp=".+">/**\n
+ * ${name}\n
+ */</template>
     </class>
 
-
     <field>
+        <template regexp="^.*(public|protected|private)*.+static.*(\w\s\w)+.+">/**\n
+ * ${element.getName()}\n
+ */</template>
 
-        <template regexp="^.*(public|protected|private)*.+static.*(\w\s\w)+.+">
-/**\n
- * The constant ${element.getName()}.\n
- */
-        </template>
+        <template regexp="^.*(public|protected|private)*.*(\w\s\w)+.+">/**\n
+&lt;#if element.parent.isInterface()&gt;
+ * ${element.getName()}\n
+&lt;#else&gt;
+ * ${name}\n
+&lt;/#if&gt;
+ */</template>
 
-        <template regexp="^.*(public|protected|private)*.*(\w\s\w)+.+">
-/**\n
-    &lt;#if element.parent.isInterface()&gt;
-
-        * The constant ${element.getName()}.\n
-    &lt;#else&gt;
-
-        * The ${name}.\n
-    &lt;/#if&gt;
- */
-        </template>
-
-        <template regexp=".+">
-/**\n
-    &lt;#if element.parent.isEnum()&gt;
-
-        *${name} ${typeName}.\n
-    &lt;#else&gt;
-
-        * The ${name}.\n
-    &lt;/#if&gt;
-*/
-        </template>
-
+        <template regexp=".+">/**\n
+&lt;#if element.parent.isEnum()&gt;
+ * ${name} ${typeName}\n
+&lt;#else&gt;
+ * ${name}\n
+&lt;/#if&gt;
+ */</template>
     </field>
 
-
     <method>
+        <template regexp="^.*(public|protected|private)*\s*.*(\w(\s*&lt;.+&gt;)*)+\s+get\w+\s*\(.*\).+">/**\n
+ * Gets ${partName}
+&lt;#if element.typeParameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.typeParameters as typeParameter&gt;
+ * @param &lt;${typeParameter.name}&gt; parameter\n
+&lt;/#list&gt;
+&lt;#if element.parameterList.parameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.parameterList.parameters as parameter&gt;
+ * @param ${parameter.name} ${paramNames[parameter.name]}\n
+&lt;/#list&gt;
+&lt;#if isNotVoid&gt;
+ *\n
+ * @return the ${partName}\n
+&lt;/#if&gt;
+&lt;#if element.throwsList.referenceElements?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.throwsList.referenceElements as exception&gt;
+ * @throws ${exception.referenceName} ${exceptionNames[exception.referenceName]}\n
+&lt;/#list&gt;
+ */</template>
 
-        <template regexp="^.*(public|protected|private)*\s*.*(\w(\s*&lt;.+&gt;)*)+\s+get\w+\s*\(.*\).+">
-/**\n
- * Gets ${partName}.\n
-     &lt;#if element.typeParameters?has_content&gt;
-         * \n
-     &lt;/#if&gt;
+        <template regexp="^.*(public|protected|private)*\s*.*(void|\w(\s*&lt;.+&gt;)*)+\s+set\w+\s*\(.*\).+">/**\n
+ * Sets ${partName}
+&lt;#if element.typeParameters?has_content&gt;
+ * \n
+&lt;/#if&gt;
+&lt;#list element.typeParameters as typeParameter&gt;
+ * @param &lt;${typeParameter.name}&gt; parameter\n
+&lt;/#list&gt;
+&lt;#if element.parameterList.parameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.parameterList.parameters as parameter&gt;
+ * @param ${parameter.name} ${paramNames[parameter.name]}\n
+&lt;/#list&gt;
+&lt;#if isNotVoid&gt;
+ *\n
+ * @return the ${partName}\n
+&lt;/#if&gt;
+&lt;#if element.throwsList.referenceElements?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.throwsList.referenceElements as exception&gt;
+ * @throws ${exception.referenceName} ${exceptionNames[exception.referenceName]}\n
+&lt;/#list&gt;
+ */</template>
 
-     &lt;#list element.typeParameters as typeParameter&gt;
+        <template regexp="^.*((public\s+static)|(static\s+public))\s+void\s+main\s*\(\s*String\s*(\[\s*\]|\.\.\.)\s+\w+\s*\).+">/**\n
+ * ${name}\n
+&lt;#if element.parameterList.parameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+ * @param ${element.parameterList.parameters[0].name}  ${element.parameterList.parameters[0].name}\n
+&lt;#if element.throwsList.referenceElements?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.throwsList.referenceElements as exception&gt;
+ * @throws ${exception.referenceName} ${exceptionNames[exception.referenceName]}\n
+&lt;/#list&gt;
+ */</template>
 
-         * @param &lt;${typeParameter.name}&gt; the type parameter\n
-     &lt;/#list&gt;
-
-     &lt;#if element.parameterList.parameters?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.parameterList.parameters as parameter&gt;
-
-         * @param ${parameter.name} the ${paramNames[parameter.name]}\n
-     &lt;/#list&gt;
-
-     &lt;#if isNotVoid&gt;
-
-         *\n
-         * @return the ${partName}\n
-     &lt;/#if&gt;
-
-     &lt;#if element.throwsList.referenceElements?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.throwsList.referenceElements as exception&gt;
-
-         * @throws ${exception.referenceName} the ${exceptionNames[exception.referenceName]}\n
-     &lt;/#list&gt;
-
- */
-        </template>
-
-        <template regexp="^.*(public|protected|private)*\s*.*(void|\w(\s*&lt;.+&gt;)*)+\s+set\w+\s*\(.*\).+">
-/**\n
- * Sets ${partName}.\n
-     &lt;#if element.typeParameters?has_content&gt;
-         * \n
-     &lt;/#if&gt;
-
-     &lt;#list element.typeParameters as typeParameter&gt;
-
-         * @param &lt;${typeParameter.name}&gt; the type parameter\n
-     &lt;/#list&gt;
-
-     &lt;#if element.parameterList.parameters?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.parameterList.parameters as parameter&gt;
-
-         * @param ${parameter.name} the ${paramNames[parameter.name]}\n
-     &lt;/#list&gt;
-
-     &lt;#if isNotVoid&gt;
-
-         *\n
-         * @return the ${partName}\n
-     &lt;/#if&gt;
-
-     &lt;#if element.throwsList.referenceElements?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.throwsList.referenceElements as exception&gt;
-
-         * @throws ${exception.referenceName} the ${exceptionNames[exception.referenceName]}\n
-     &lt;/#list&gt;
-
- */
-        </template>
-
-        <template regexp="^.*((public\s+static)|(static\s+public))\s+void\s+main\s*\(\s*String\s*(\[\s*\]|\.\.\.)\s+\w+\s*\).+">
-/**\n
- * The entry point of application.\n
-
-     &lt;#if element.parameterList.parameters?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     * @param ${element.parameterList.parameters[0].name} the input arguments\n
-     &lt;#if element.throwsList.referenceElements?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.throwsList.referenceElements as exception&gt;
-
-         * @throws ${exception.referenceName} the ${exceptionNames[exception.referenceName]}\n
-     &lt;/#list&gt;
-
- */
-        </template>
-
-        <template regexp=".+">
-/**\n
- * ${name}&lt;#if isNotVoid&gt; ${return}&lt;/#if&gt;.\n
-     &lt;#if element.typeParameters?has_content&gt;
-         * \n
-     &lt;/#if&gt;
-
-     &lt;#list element.typeParameters as typeParameter&gt;
-
-         * @param &lt;${typeParameter.name}&gt; the type parameter\n
-     &lt;/#list&gt;
-
-     &lt;#if element.parameterList.parameters?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.parameterList.parameters as parameter&gt;
-
-         * @param ${parameter.name} the ${paramNames[parameter.name]}\n
-     &lt;/#list&gt;
-
-     &lt;#if isNotVoid&gt;
-
-         *\n
-         * @return the ${return}\n
-     &lt;/#if&gt;
-
-     &lt;#if element.throwsList.referenceElements?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.throwsList.referenceElements as exception&gt;
-
-         * @throws ${exception.referenceName} the ${exceptionNames[exception.referenceName]}\n
-     &lt;/#list&gt;
-
- */
-        </template>
-
+        <template regexp=".+">/**\n
+ * ${name}&lt;#if isNotVoid&gt; ${return}\n
+&lt;/#if&gt;
+&lt;#if element.typeParameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.typeParameters as typeParameter&gt;
+ * @param &lt;${typeParameter.name}&gt; parameter\n
+&lt;/#list&gt;
+&lt;#if element.parameterList.parameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.parameterList.parameters as parameter&gt;
+ * @param ${parameter.name} ${paramNames[parameter.name]}\n
+&lt;/#list&gt;
+&lt;#if isNotVoid&gt;
+ *\n
+ * @return the ${return}\n
+&lt;/#if&gt;
+&lt;#if element.throwsList.referenceElements?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.throwsList.referenceElements as exception&gt;
+ * @throws ${exception.referenceName} ${exceptionNames[exception.referenceName]}\n
+&lt;/#list&gt;
+ */</template>
     </method>
-
 
     <constructor>
 
-        <template regexp=".+">
-/**\n
- * Instantiates a new ${name}.\n
-     &lt;#if element.parameterList.parameters?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.parameterList.parameters as parameter&gt;
-
-         * @param ${parameter.name} the ${paramNames[parameter.name]}\n
-     &lt;/#list&gt;
-
-     &lt;#if element.throwsList.referenceElements?has_content&gt;
-
-         *\n
-     &lt;/#if&gt;
-
-     &lt;#list element.throwsList.referenceElements as exception&gt;
-
-         * @throws ${exception.referenceName} the ${exceptionNames[exception.referenceName]}\n
-     &lt;/#list&gt;
-
- */
-        </template>
-
+        <template regexp=".+">/**\n
+ * ${name}\n
+&lt;#if element.parameterList.parameters?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.parameterList.parameters as parameter&gt;
+ * @param ${parameter.name} ${paramNames[parameter.name]}\n
+&lt;/#list&gt;&lt;#if element.throwsList.referenceElements?has_content&gt;
+ *\n
+&lt;/#if&gt;
+&lt;#list element.throwsList.referenceElements as exception&gt;
+ * @throws ${exception.referenceName} ${exceptionNames[exception.referenceName]}\n
+&lt;/#list&gt;
+ */</template>
     </constructor>
-
 </templates>

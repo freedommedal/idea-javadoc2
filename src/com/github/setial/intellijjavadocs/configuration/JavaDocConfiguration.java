@@ -1,7 +1,7 @@
 package com.github.setial.intellijjavadocs.configuration;
 
 import com.github.setial.intellijjavadocs.model.settings.JavaDocSettings;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.BaseComponent;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -9,17 +9,12 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Sergey Timofiychuk
  */
-public interface JavaDocConfiguration extends ApplicationComponent {
-
-    /**
-     * The constant COMPONENT_VERSION.
-     */
-    String COMPONENT_VERSION = "2.1.0";
+public interface JavaDocConfiguration extends BaseComponent {
 
     /**
      * The constant COMPONENT_NAME.
      */
-    String COMPONENT_NAME = "JavaDocConfiguration_" + COMPONENT_VERSION;
+    String COMPONENT_NAME = "IntellijJavadocs2_1.0.0";
 
     /**
      * Gets the configuration.
@@ -29,4 +24,7 @@ public interface JavaDocConfiguration extends ApplicationComponent {
     @Nullable
     JavaDocSettings getConfiguration();
 
+    JavaDocSettings getSettings();
+
+    void setupTemplates();
 }

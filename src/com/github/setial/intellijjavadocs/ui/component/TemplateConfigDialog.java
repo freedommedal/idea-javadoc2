@@ -43,7 +43,7 @@ public class TemplateConfigDialog extends DialogWrapper {
     public TemplateConfigDialog(Entry<String, String> model) {
         super(true);
         if (model != null) {
-            Map<String, String> modelCopy = new HashMap<String, String>();
+            Map<String, String> modelCopy = new HashMap<>();
             modelCopy.put(model.getKey(), model.getValue());
             this.model = modelCopy.entrySet().iterator().next();
         }
@@ -56,7 +56,7 @@ public class TemplateConfigDialog extends DialogWrapper {
      * @return the model
      */
     public Entry<String, String> getModel() {
-        Map<String, String> model = new HashMap<String, String>();
+        Map<String, String> model = new HashMap<>();
         model.put(nameField.getText(), templateField.getText());
         return model.entrySet().iterator().next();
     }
@@ -72,7 +72,7 @@ public class TemplateConfigDialog extends DialogWrapper {
             nameField.setText(model.getKey());
         }
         JPanel namePanel = new JPanel(new BorderLayout());
-        namePanel.setBorder(IdeBorderFactory.createTitledBorder("Template regexp", false, new Insets(0, 0, 10, 0)));
+        namePanel.setBorder(IdeBorderFactory.createTitledBorder("正则表达式", false, new Insets(0, 0, 10, 0)));
         namePanel.add(nameField, BorderLayout.CENTER);
 
         templateField = new JTextArea();
@@ -80,7 +80,7 @@ public class TemplateConfigDialog extends DialogWrapper {
             templateField.setText(model.getValue());
         }
         JPanel templatePanel = new JPanel(new BorderLayout());
-        templatePanel.setBorder(IdeBorderFactory.createTitledBorder("Template content", false, new Insets(0, 0, 0, 0)));
+        templatePanel.setBorder(IdeBorderFactory.createTitledBorder("模板内容", false, new Insets(0, 0, 0, 0)));
         templatePanel.add(templateField, BorderLayout.CENTER);
 
         panel.add(namePanel, getConstraints(0, 0));

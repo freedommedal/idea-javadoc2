@@ -1,0 +1,93 @@
+<idea-plugin>
+    <id>com.sgota.plugin.idea.javadocs2</id>
+    <name>Idea Javadocs2</name>
+    <version>1.0.0</version>
+    <vendor email="freedemmedal@gmail.com" url="https://github.com/freedommedal/idea-javadocs2">tiankuo</vendor>
+
+    <description><![CDATA[
+      Intellij插件Javadocs的中文增强版,在java类元素(如field、method)上生成java文档的插件,感谢原作者.
+      </br>
+      Intellij plugin Javadocs the Chinese language enhanced version,
+      Plugin that generates java docs on java class elements, like field,method,
+      Thanks to the original author.
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <h3>1.0.0</h3>
+        <ul>
+            <li>支持jdk1.8环境,增加对接口生成注释</li>
+            <li>优化部分代码和模板内容</li>
+            <li>汉化插件全部内容</li>
+        </ul>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="171"/>
+
+    <depends>com.intellij.modules.java</depends>
+
+    <application-components>
+        <component>
+            <interface-class>com.github.setial.intellijjavadocs.operation.JavaDocWriter</interface-class>
+            <implementation-class>com.github.setial.intellijjavadocs.operation.impl.JavaDocWriterImpl</implementation-class>
+        </component>
+        <component>
+            <interface-class>com.github.setial.intellijjavadocs.configuration.JavaDocConfiguration</interface-class>
+            <implementation-class>com.github.setial.intellijjavadocs.configuration.impl.JavaDocConfigurationImpl</implementation-class>
+        </component>
+        <component>
+            <interface-class>com.github.setial.intellijjavadocs.template.DocTemplateManager</interface-class>
+            <implementation-class>com.github.setial.intellijjavadocs.template.impl.DocTemplateManagerImpl</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <component>
+            <interface-class>com.github.setial.intellijjavadocs.template.DocTemplateProcessor</interface-class>
+            <implementation-class>com.github.setial.intellijjavadocs.template.impl.DocTemplateProcessorImpl</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <group id="com.sgota.plugin.idea.javadocs2.action.file_content" text="Idea JavaDoc2" popup="true">
+            <separator/>
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocGenerateActionOnEditor"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocGenerateAction"
+                    text="当前元素生成Java注释">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift J"/>
+            </action>
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocsGenerateActionOnEditor"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocsGenerateAction"
+                    text="当前文件生成Java注释">
+            </action>
+
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocRemoveActionOnEditor"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocRemoveAction"
+                    text="当前元素删除Java注释">
+            </action>
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocsRemoveActionOnEditor"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocsRemoveAction"
+                    text="当前文件删除Java注释">
+            </action>
+            <separator/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </group>
+        <group id="com.sgota.plugin.idea.javadocs2.action.file_tree" text="Idea JavaDoc2" popup="true">
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocsGenerateActionOnProject"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocsGenerateAction"
+                    text="当前目录生成Java注释">
+            </action>
+            <action id="com.sgota.plugin.idea.javadocs2.action.JavaDocsRemoveActionOnProject"
+                    class="com.github.setial.intellijjavadocs.action.JavaDocsRemoveAction"
+                    text="当前目录删除Java注释">
+            </action>
+            <add-to-group group-id="CodeFormatGroup" anchor="last" />
+            <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="last" />
+        </group>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable groupId="tools" id="com.sgota.plugin.idea.javadocs2.settings.AppConfigurable" instance="com.sgota.plugin.idea.javadocs2.settings.AppConfigurable" />
+    </extensions>
+
+</idea-plugin>
