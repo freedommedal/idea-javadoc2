@@ -2,9 +2,10 @@ package com.sgota.plugin.idea.javadocs2.settings;
 
 import com.github.setial.intellijjavadocs.configuration.JavaDocConfiguration;
 import com.github.setial.intellijjavadocs.ui.settings.ConfigPanel;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
-import javax.swing.*;
+
+import javax.swing.JComponent;
 
 /**
  * App configurable
@@ -30,34 +31,34 @@ public class AppConfigurable implements Configurable {
 
     @Override
     public JComponent createComponent() {
-        if (configPanel == null) {
-            JavaDocConfiguration service = ServiceManager.getService(JavaDocConfiguration.class);
-            configPanel = new ConfigPanel(service.getSettings());
+        if (this.configPanel == null) {
+            JavaDocConfiguration service = ApplicationManager.getApplication().getComponent(JavaDocConfiguration.class);
+            this.configPanel = new ConfigPanel(service.getSettings());
         }
-        reset();
-        return configPanel;
+        this.reset();
+        return this.configPanel;
     }
 
     @Override
     public boolean isModified() {
-        return configPanel.isModified();
+        return this.configPanel.isModified();
     }
 
     @Override
     public void apply() {
-        JavaDocConfiguration service = ServiceManager.getService(JavaDocConfiguration.class);
-        configPanel.apply();
+        JavaDocConfiguration service = ApplicationManager.getApplication().getComponent(JavaDocConfiguration.class);
+        this.configPanel.apply();
         service.setupTemplates();
     }
 
     @Override
     public void reset() {
-        configPanel.reset();
+        this.configPanel.reset();
     }
 
     @Override
     public void disposeUIResources() {
-        configPanel.disposeUIResources();
-        configPanel = null;
+        this.configPanel.disposeUIResources();
+        this.configPanel = null;
     }
 }

@@ -9,7 +9,7 @@ import com.github.setial.intellijjavadocs.operation.JavaDocWriter;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbService;
@@ -23,6 +23,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +40,7 @@ public class JavaDocGenerateAction extends BaseAction {
 
     private static final Logger LOGGER = Logger.getInstance(JavaDocGenerateAction.class);
 
-    private JavaDocWriter writer;
+    private final JavaDocWriter writer;
 
     /**
      * Instantiates a new Java doc generate action.
@@ -55,7 +56,7 @@ public class JavaDocGenerateAction extends BaseAction {
      */
     public JavaDocGenerateAction(CodeInsightActionHandler handler) {
         super(handler);
-        writer = ServiceManager.getService(JavaDocWriter.class);
+        this.writer = ApplicationManager.getApplication().getComponent(JavaDocWriter.class);
     }
 
     /**
@@ -86,21 +87,21 @@ public class JavaDocGenerateAction extends BaseAction {
             return;
         }
         List<PsiElement> elements = new LinkedList<PsiElement>();
-        PsiElement firstElement = getJavaElement(PsiUtilCore.getElementAtOffset(file, startPosition));
+        PsiElement firstElement = this.getJavaElement(PsiUtilCore.getElementAtOffset(file, startPosition));
         if (firstElement != null) {
             PsiElement element = firstElement;
             do {
-                if (isAllowedElementType(element)) {
+                if (this.isAllowedElementType(element)) {
                     elements.add(element);
                 }
                 element = element.getNextSibling();
                 if (element == null) {
                     break;
                 }
-            } while (isElementInSelection(element, startPosition, endPosition));
+            } while (this.isElementInSelection(element, startPosition, endPosition));
         }
         for (PsiElement element : elements) {
-            processElement(element);
+            this.processElement(element);
         }
     }
 
@@ -110,13 +111,13 @@ public class JavaDocGenerateAction extends BaseAction {
      * @param element the Element
      */
     protected void processElement(@NotNull PsiElement element) {
-        JavaDocGenerator generator = getGenerator(element);
+        JavaDocGenerator generator = this.getGenerator(element);
         if (generator != null) {
             try {
                 @SuppressWarnings("unchecked")
                 PsiDocComment javaDoc = generator.generate(element);
                 if (javaDoc != null) {
-                    writer.write(javaDoc, element);
+                    this.writer.write(javaDoc, element);
                 }
             } catch (TemplateNotFoundException e) {
                 LOGGER.warn(e);

@@ -1,8 +1,9 @@
 package com.github.setial.intellijjavadocs.action;
 
 import com.github.setial.intellijjavadocs.operation.JavaDocWriter;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiElement;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,17 +13,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JavaDocsRemoveAction extends JavaDocsGenerateAction {
 
-    private JavaDocWriter writer;
+    private final JavaDocWriter writer;
 
     /**
      * Instantiates a new Java docs remove action.
      */
     public JavaDocsRemoveAction() {
-        writer = ServiceManager.getService(JavaDocWriter.class);
+        this.writer = ApplicationManager.getApplication().getComponent(JavaDocWriter.class);
     }
 
     @Override
     protected void processElement(@NotNull PsiElement element) {
-        writer.remove(element);
+        this.writer.remove(element);
     }
 }

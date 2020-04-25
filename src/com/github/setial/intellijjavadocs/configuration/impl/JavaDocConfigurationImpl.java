@@ -7,17 +7,19 @@ import com.github.setial.intellijjavadocs.model.settings.Level;
 import com.github.setial.intellijjavadocs.model.settings.Mode;
 import com.github.setial.intellijjavadocs.model.settings.Visibility;
 import com.github.setial.intellijjavadocs.template.DocTemplateManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
-import java.util.HashSet;
-import java.util.Set;
+
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The type Java doc configuration impl.
@@ -34,14 +36,14 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration,
     private static final Logger LOGGER = Logger.getInstance(JavaDocConfigurationImpl.class);
 
     private JavaDocSettings settings;
-    private DocTemplateManager templateManager;
+    private final DocTemplateManager templateManager;
     private boolean loadedStoredConfig = false;
 
     /**
      * Instantiates a new Java doc configuration object.
      */
     public JavaDocConfigurationImpl() {
-        templateManager = ServiceManager.getService(DocTemplateManager.class);
+        this.templateManager = ApplicationManager.getApplication().getComponent(DocTemplateManager.class);
     }
 
     @NotNull
@@ -54,7 +56,7 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration,
     public JavaDocSettings getConfiguration() {
         JavaDocSettings result;
         try {
-            result = (JavaDocSettings)getSettings().clone();
+            result = (JavaDocSettings) this.getSettings().clone();
         } catch (Exception e) {
             // return null if cannot clone object
             result = null;
@@ -66,25 +68,25 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration,
     @Override
     public Element getState() {
         Element root = new Element("JAVA_DOC_SETTINGS_PLUGIN");
-        if (settings != null) {
-            settings.addToDom(root);
-            loadedStoredConfig = true;
+        if (this.settings != null) {
+            this.settings.addToDom(root);
+            this.loadedStoredConfig = true;
         }
         return root;
     }
 
     @Override
     public void loadState(@NotNull Element javaDocSettings) {
-        settings = new JavaDocSettings(javaDocSettings);
-        setupTemplates();
-        loadedStoredConfig = true;
+        this.settings = new JavaDocSettings(javaDocSettings);
+        this.setupTemplates();
+        this.loadedStoredConfig = true;
     }
 
     @Override
     public JavaDocSettings getSettings() {
-        if (!loadedStoredConfig) {
+        if (!this.loadedStoredConfig) {
             // setup default values
-            settings = new JavaDocSettings();
+            this.settings = new JavaDocSettings();
             Set<Level> levels = new HashSet<>();
             levels.add(Level.TYPE);
             levels.add(Level.METHOD);
@@ -95,27 +97,27 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration,
             visibilities.add(Visibility.PROTECTED);
             visibilities.add(Visibility.DEFAULT);
 
-            settings.getGeneralSettings().setOverriddenMethods(false);
-            settings.getGeneralSettings().setSplittedClassName(true);
-            settings.getGeneralSettings().setMode(Mode.UPDATE);
-            settings.getGeneralSettings().setLevels(levels);
-            settings.getGeneralSettings().setVisibilities(visibilities);
+            this.settings.getGeneralSettings().setOverriddenMethods(false);
+            this.settings.getGeneralSettings().setSplittedClassName(true);
+            this.settings.getGeneralSettings().setMode(Mode.UPDATE);
+            this.settings.getGeneralSettings().setLevels(levels);
+            this.settings.getGeneralSettings().setVisibilities(visibilities);
 
-            settings.getTemplateSettings().setClassTemplates(templateManager.getClassTemplates());
-            settings.getTemplateSettings().setConstructorTemplates(templateManager.getConstructorTemplates());
-            settings.getTemplateSettings().setMethodTemplates(templateManager.getMethodTemplates());
-            settings.getTemplateSettings().setFieldTemplates(templateManager.getFieldTemplates());
+            this.settings.getTemplateSettings().setClassTemplates(this.templateManager.getClassTemplates());
+            this.settings.getTemplateSettings().setConstructorTemplates(this.templateManager.getConstructorTemplates());
+            this.settings.getTemplateSettings().setMethodTemplates(this.templateManager.getMethodTemplates());
+            this.settings.getTemplateSettings().setFieldTemplates(this.templateManager.getFieldTemplates());
         }
-        return settings;
+        return this.settings;
     }
 
     @Override
     public void setupTemplates() {
         try {
-            templateManager.setClassTemplates(settings.getTemplateSettings().getClassTemplates());
-            templateManager.setConstructorTemplates(settings.getTemplateSettings().getConstructorTemplates());
-            templateManager.setMethodTemplates(settings.getTemplateSettings().getMethodTemplates());
-            templateManager.setFieldTemplates(settings.getTemplateSettings().getFieldTemplates());
+            this.templateManager.setClassTemplates(this.settings.getTemplateSettings().getClassTemplates());
+            this.templateManager.setConstructorTemplates(this.settings.getTemplateSettings().getConstructorTemplates());
+            this.templateManager.setMethodTemplates(this.settings.getTemplateSettings().getMethodTemplates());
+            this.templateManager.setFieldTemplates(this.settings.getTemplateSettings().getFieldTemplates());
         } catch (SetupTemplateException e) {
             LOGGER.error(e);
             Messages.showErrorDialog("Javadocs plugin is not available, cause: " + e.getMessage(), "Javadocs plugin");

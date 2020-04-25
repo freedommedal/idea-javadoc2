@@ -9,7 +9,7 @@ import com.github.setial.intellijjavadocs.model.settings.Visibility;
 import com.github.setial.intellijjavadocs.template.DocTemplateManager;
 import com.github.setial.intellijjavadocs.template.DocTemplateProcessor;
 import com.github.setial.intellijjavadocs.utils.JavaDocUtils;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.PomNamedTarget;
 import com.intellij.psi.PsiElement;
@@ -17,6 +17,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.javadoc.PsiDocComment;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +33,10 @@ import java.util.Map;
  */
 public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements JavaDocGenerator<T> {
 
-    private DocTemplateManager docTemplateManager;
-    private DocTemplateProcessor docTemplateProcessor;
-    private PsiElementFactory psiElementFactory;
-    private JavaDocConfiguration settings;
+    private final DocTemplateManager docTemplateManager;
+    private final DocTemplateProcessor docTemplateProcessor;
+    private final PsiElementFactory psiElementFactory;
+    private final JavaDocConfiguration settings;
 
     /**
      * Instantiates a new Abstract java doc generator.
@@ -43,10 +44,10 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      * @param project the Project
      */
     public AbstractJavaDocGenerator(@NotNull Project project) {
-        docTemplateManager = ServiceManager.getService(project, DocTemplateManager.class);
-        docTemplateProcessor = ServiceManager.getService(project, DocTemplateProcessor.class);
-        psiElementFactory = PsiElementFactory.SERVICE.getInstance(project);
-        settings = ServiceManager.getService(project, JavaDocConfiguration.class);
+        this.docTemplateManager = ApplicationManager.getApplication().getComponent(DocTemplateManager.class);
+        this.docTemplateProcessor = project.getComponent(DocTemplateProcessor.class);
+        this.psiElementFactory = PsiElementFactory.SERVICE.getInstance(project);
+        this.settings = ApplicationManager.getApplication().getComponent(JavaDocConfiguration.class);
     }
 
     @Nullable
@@ -59,7 +60,7 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
             oldDocComment = (PsiDocComment) firstElement;
         }
 
-        JavaDocSettings configuration = settings.getConfiguration();
+        JavaDocSettings configuration = this.settings.getConfiguration();
         if (configuration != null) {
             Mode mode = configuration.getGeneralSettings().getMode();
             switch (mode) {
@@ -68,14 +69,14 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
                         break;
                     }
                 case REPLACE:
-                    result = replaceJavaDocAction(element);
+                    result = this.replaceJavaDocAction(element);
                     break;
                 case UPDATE:
                 default:
                     if (oldDocComment != null) {
-                        result = updateJavaDocAction(element, oldDocComment);
+                        result = this.updateJavaDocAction(element, oldDocComment);
                     } else {
-                        result = replaceJavaDocAction(element);
+                        result = this.replaceJavaDocAction(element);
                     }
                     break;
             }
@@ -90,7 +91,7 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      */
     @NotNull
     protected DocTemplateManager getDocTemplateManager() {
-        return docTemplateManager;
+        return this.docTemplateManager;
     }
 
     /**
@@ -100,7 +101,7 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      */
     @NotNull
     protected DocTemplateProcessor getDocTemplateProcessor() {
-        return docTemplateProcessor;
+        return this.docTemplateProcessor;
     }
 
     /**
@@ -110,7 +111,7 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      */
     @NotNull
     protected PsiElementFactory getPsiElementFactory() {
-        return psiElementFactory;
+        return this.psiElementFactory;
     }
 
     /**
@@ -120,7 +121,7 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      */
     @NotNull
     protected JavaDocConfiguration getSettings() {
-        return settings;
+        return this.settings;
     }
 
     /**
@@ -130,10 +131,10 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
      * @return the boolean
      */
     protected boolean shouldGenerate(PsiModifierList modifiers) {
-        return checkModifiers(modifiers, PsiModifier.PUBLIC, Visibility.PUBLIC) ||
-                checkModifiers(modifiers, PsiModifier.PROTECTED, Visibility.PROTECTED) ||
-                checkModifiers(modifiers, PsiModifier.PACKAGE_LOCAL, Visibility.DEFAULT) ||
-                checkModifiers(modifiers, PsiModifier.PRIVATE, Visibility.PRIVATE);
+        return this.checkModifiers(modifiers, PsiModifier.PUBLIC, Visibility.PUBLIC) ||
+               this.checkModifiers(modifiers, PsiModifier.PROTECTED, Visibility.PROTECTED) ||
+               this.checkModifiers(modifiers, PsiModifier.PACKAGE_LOCAL, Visibility.DEFAULT) ||
+               this.checkModifiers(modifiers, PsiModifier.PRIVATE, Visibility.PRIVATE);
     }
 
     /**
@@ -145,36 +146,36 @@ public abstract class AbstractJavaDocGenerator<T extends PsiElement> implements 
     protected Map<String, Object> getDefaultParameters(PomNamedTarget element) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("element", element);
-        params.put("name", getDocTemplateProcessor().buildDescription(element.getName(), true));
-        params.put("partName", getDocTemplateProcessor().buildPartialDescription(element.getName()));
+        params.put("name", this.getDocTemplateProcessor().buildDescription(element.getName(), true));
+        params.put("partName", this.getDocTemplateProcessor().buildPartialDescription(element.getName()));
         params.put("splitNames", StringUtils.splitByCharacterTypeCamelCase(element.getName()));
         return params;
     }
 
     private PsiDocComment updateJavaDocAction(T element, PsiDocComment oldDocComment) {
         PsiDocComment result = null;
-        JavaDoc newJavaDoc = generateJavaDoc(element);
+        JavaDoc newJavaDoc = this.generateJavaDoc(element);
         JavaDoc oldJavaDoc = JavaDocUtils.createJavaDoc(oldDocComment);
         if (newJavaDoc != null) {
             newJavaDoc = JavaDocUtils.mergeJavaDocs(oldJavaDoc, newJavaDoc);
             String javaDoc = newJavaDoc.toJavaDoc();
-            result = psiElementFactory.createDocCommentFromText(javaDoc);
+            result = this.psiElementFactory.createDocCommentFromText(javaDoc);
         }
         return result;
     }
 
     private PsiDocComment replaceJavaDocAction(T element) {
         PsiDocComment result = null;
-        JavaDoc newJavaDoc = generateJavaDoc(element);
+        JavaDoc newJavaDoc = this.generateJavaDoc(element);
         if (newJavaDoc != null) {
             String javaDoc = newJavaDoc.toJavaDoc();
-            result = psiElementFactory.createDocCommentFromText(javaDoc);
+            result = this.psiElementFactory.createDocCommentFromText(javaDoc);
         }
         return result;
     }
 
     private boolean checkModifiers(PsiModifierList modifiers, String modifier, Visibility visibility) {
-        JavaDocSettings configuration = getSettings().getConfiguration();
+        JavaDocSettings configuration = this.getSettings().getConfiguration();
         return modifiers != null && modifiers.hasModifierProperty(modifier) && configuration != null &&
                 configuration.getGeneralSettings().getVisibilities().contains(visibility);
     }
