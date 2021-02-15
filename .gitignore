@@ -12,3 +12,5 @@ intellij-community
 *.zip
 doc/
 lib/
+
+.gradle/

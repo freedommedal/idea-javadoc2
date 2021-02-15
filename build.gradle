@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.6.5'
+}
+
+java {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+}
+
+group 'com.sgota.plugin.idea'
+version '1.1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+intellij {
+    pluginName 'Idea Javadocs2'
+    version '2019.3.5'
+    type 'IU'
+    sandboxDirectory System.getProperty("user.home") + "/idea-plugins-sandbox"
+    plugins = ['java']
+}
+
+patchPluginXml {
+    sinceBuild '193'
+    untilBuild ''
+}
+
+dependencies {
+    implementation 'commons-beanutils:commons-beanutils:1.8.3'
+    implementation 'commons-collections:commons-collections:3.2.1'
+    implementation 'org.apache.commons:commons-lang3:3.3.1'
+    implementation 'org.freemarker:freemarker:2.3.23'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
