@@ -1,6 +1,6 @@
 package com.github.setial.intellijjavadocs.template;
 
-import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.BaseComponent;
 import freemarker.template.Template;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,13 +11,7 @@ import java.util.Map;
  *
  * @author Sergey Timofiychuk
  */
-public interface DocTemplateProcessor extends ProjectComponent {
-
-    /**
-     * The constant COMPONENT_NAME.
-     */
-    String COMPONENT_NAME = "DocTemplateProcessor";
-
+public interface DocTemplateProcessor extends BaseComponent {
     /**
      * Merge.
      *

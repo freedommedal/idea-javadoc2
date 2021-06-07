@@ -29,28 +29,7 @@ import java.util.Collections;
  * @author Sergey Timofiychuk
  */
 public class JavaDocWriterImpl implements JavaDocWriter {
-
-    /**
-     * The constant COMPONENT_NAME.
-     */
-    public static final String COMPONENT_NAME = "JavaDocWriter";
-
     private static final Logger LOGGER = Logger.getInstance(JavaDocWriterImpl.class);
-
-    @Override
-    public void initComponent() {
-    }
-
-    @Override
-    public void disposeComponent() {
-    }
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return COMPONENT_NAME;
-
-    }
 
     @Override
     public void write(@NotNull PsiDocComment javaDoc, @NotNull PsiElement beforeElement) {

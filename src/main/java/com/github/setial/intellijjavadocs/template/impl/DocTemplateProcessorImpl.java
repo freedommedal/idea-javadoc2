@@ -3,6 +3,7 @@ package com.github.setial.intellijjavadocs.template.impl;
 import com.github.setial.intellijjavadocs.exception.SetupTemplateException;
 import com.github.setial.intellijjavadocs.template.DocTemplateProcessor;
 import com.github.setial.intellijjavadocs.utils.XmlUtils;
+import com.intellij.openapi.components.BaseComponent;
 import freemarker.template.Template;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -21,28 +22,6 @@ import java.util.Map;
 public class DocTemplateProcessorImpl implements DocTemplateProcessor {
 
     private static final List<String> SPECIAL_SYMBOLS = Arrays.asList("_", "$");
-
-    @Override
-    public void projectOpened() {
-    }
-
-    @Override
-    public void projectClosed() {
-    }
-
-    @Override
-    public void initComponent() {
-    }
-
-    @Override
-    public void disposeComponent() {
-    }
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return COMPONENT_NAME;
-    }
 
     @NotNull
     @Override

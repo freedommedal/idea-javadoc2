@@ -16,12 +16,6 @@ import java.util.Map;
  * @author Sergey Timofiychuk
  */
 public interface DocTemplateManager extends BaseComponent {
-
-    /**
-     * The constant COMPONENT_NAME.
-     */
-    String COMPONENT_NAME = "DocTemplateManager";
-
     /**
      * Gets the class template.
      *

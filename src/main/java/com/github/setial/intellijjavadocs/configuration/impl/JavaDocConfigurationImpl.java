@@ -8,28 +8,24 @@ import com.github.setial.intellijjavadocs.model.settings.Mode;
 import com.github.setial.intellijjavadocs.model.settings.Visibility;
 import com.github.setial.intellijjavadocs.template.DocTemplateManager;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
-import java.util.HashSet;
-import java.util.Set;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The type Java doc configuration impl.
  *
  * @author Sergey Timofiychuk
  */
-@State(
-    name = JavaDocConfiguration.COMPONENT_NAME,
-    storages = @Storage("intellij-javadocs2.xml")
-)
-public class JavaDocConfigurationImpl implements JavaDocConfiguration,
-    PersistentStateComponent<Element> {
+@State(name = "IntellijJavadocs2_1.0.0", storages = @Storage("intellij-javadocs2.xml"))
+public class JavaDocConfigurationImpl implements JavaDocConfiguration {
 
     private static final Logger LOGGER = Logger.getInstance(JavaDocConfigurationImpl.class);
 
@@ -44,17 +40,11 @@ public class JavaDocConfigurationImpl implements JavaDocConfiguration,
         templateManager = ApplicationManager.getApplication().getComponent(DocTemplateManager.class);
     }
 
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return COMPONENT_NAME;
-    }
-
     @Override
     public JavaDocSettings getConfiguration() {
         JavaDocSettings result;
         try {
-            result = (JavaDocSettings)getSettings().clone();
+            result = (JavaDocSettings) getSettings().clone();
         } catch (Exception e) {
             // return null if cannot clone object
             result = null;
