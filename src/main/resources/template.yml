@@ -1,0 +1,45 @@
+class:
+  '.+': |-
+    /**
+     * ${className}
+     *
+     * @author admin
+     */
+field:
+  '.+': |-
+    /**
+     * ${fieldName}
+     */
+method:
+  '.+': |-
+    /**
+     * ${methodName}
+     *
+    #foreach($parameter in ${parameters})
+     * @param ${parameter.name} ${parameter.name}
+    #end
+    #foreach($typeParameter in $typeParameters)
+     * @param <${typeParameter.name}> ${typeParameter.name}
+    #end
+    #if($returnName)
+     * @return ${returnName}
+    #end
+    #foreach($exception in ${exceptions})
+     * @throws ${exception.name} ${exception.name}
+    #end
+     */
+constructor:
+  '.+': |-
+    /**
+     * ${methodName}
+     *
+    #foreach($parameter in ${parameters})
+     * @param ${parameter.name} ${parameter.name}
+    #end
+    #foreach($typeParameter in $typeParameters)
+     * @param <${typeParameter.name}> ${typeParameter.name}
+    #end
+    #foreach($exception in ${exceptions})
+     * @throws ${exception.name} ${exception.name}
+    #end
+     */
