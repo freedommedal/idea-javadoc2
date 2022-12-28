@@ -1,15 +1,20 @@
-intellij-javadocs2
-============
+# idea-javadoc2
+Intellij 插件,可以一键快速生成java注释.
 
-Intellij plugin Javadocs 中文增强版
-因为原有插件很久不维护了，已经不适应新版本Intellij idea，所以对插件进行了修改，并进行了汉化。
-同时增加了增强功能，比如支持接口元素
+因为原插件很久不维护,已经无法在新版本Intellij使用,所以对插件进行了重构.
 
-使用教程 https://github.com/freedommedal/idea-javadocs2/wiki
+Fork http://setial.github.com/intellij-javadocs/ 感谢原作者.
 
-Intellij plugin Javadocs the Chinese language enhanced version
+使用教程 https://github.com/freedommedal/idea-javadoc2/wiki
 
-Fork http://setial.github.com/intellij-javadocs/ 
 
-Thanks to the original author。
+English
+
+Intellij plug-in, can quickly generate java annotations with one click.
+
+Because the original plugin is not maintained for a long time,It is no longer available in the new version of Intellij,So the plug-in was refactored.
+
+Fork http://setial.github.com/intellij-javadocs/ Thanks to the original author.
+
+Tutorial https://github.com/freedommedal/idea-javadoc2/wiki
 
