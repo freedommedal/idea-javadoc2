@@ -2,16 +2,22 @@
     <id>com.sgota.plugin.idea.javadoc2</id>
     <name>Javadoc2</name>
     <category>Code tools</category>
-    <vendor email="freedemmedal@gmail.com" url="https://github.com/freedommedal/idea-javadoc2">tiankuo</vendor>
+    <vendor email="freedemmedal@gmail.com" url="https://github.com/freedommedal">tiankuo</vendor>
     <idea-version since-build="211"/>
     <description><![CDATA[
-      <p>在java类,成员变量,方法,快速生成Java注释.</p>
-      <p>in java classes, member variables, and methods, quickly generate java comment.</p>
+      <p>In java classes, member variables, methods, quickly generate Java comments.
+      In the editor, select Java classes, member variables, methods and other elements, right-click the menu,
+      select Generate submenu, and click the button to <code>选择当前元素生成Java注释</code></p>
+      <p>Detailed documentation, please visit https://doc.sgota.com/docs/idea-javadoc2</p>
+      <p>在java类,成员变量,方法,快速生成Java注释.
+      在编辑器中，选择Java类、成员变量、方法等元素，右键弹出菜单，
+      选择Generate子菜单，点击按钮<code>选择当前元素生成Java注释</code></p>
+      <p>详细文档请访问 <a href="https://doc.sgota.com/docs/idea-javadoc2">https://doc.sgota.com/docs/idea-javadoc2</a> </p>
     ]]></description>
     <change-notes><![CDATA[
         <ul>2.0.0
-            <li>重构代码</li>
             <li>Refactoring the code</li>
+            <li>重构代码</li>
         </ul>
     ]]>
     </change-notes>
