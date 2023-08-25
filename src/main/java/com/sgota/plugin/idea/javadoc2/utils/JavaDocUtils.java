@@ -78,7 +78,10 @@ public class JavaDocUtils {
      */
     private static JavaDocTag createJavaDocTag(PsiDocTag psiDocTag) {
         String docTagRefParam = findDocTagRefParam(psiDocTag);
-        String docTagValue = findDocTagValue(psiDocTag);
+        String docTagValue = null;
+        if (docTagRefParam != null) {
+            docTagValue = findDocTagValue(psiDocTag);
+        }
         List<String> docTagDescription = findDocTagDescription(psiDocTag, docTagRefParam, docTagValue);
         return new JavaDocTag(docTagRefParam, docTagValue, docTagDescription);
     }

@@ -35,7 +35,7 @@ public class JavaDocTemplateService {
         properties.put("input.encoding", "UTF-8");
         properties.put("output.encoding", "UTF-8");
         properties.put("resource.loader", "string");
-        properties.put("string.resource.loader.repository.class", "com.sgota.plugin.idea.javadoc2.service.MyStringResourceRepository");
+        properties.put("string.resource.loader.repository.class", MyStringResourceRepository.class.getName());
         velocityEngine = new VelocityEngine(properties);
         ClassLoaderUtil.runWithClassLoader(JavaDocTemplateService.class.getClassLoader(), () -> velocityEngine.init());
     }
