@@ -7,16 +7,16 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.7.3'
+    id "org.jetbrains.intellij" version "1.15.0"
 }
 
 java {
-    sourceCompatibility JavaVersion.VERSION_11
-    targetCompatibility JavaVersion.VERSION_11
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
 }
 
 group 'com.sgota.plugin.idea'
-version '2.0.0'
+version '2.1.0'
 
 repositories {
     mavenCentral()
@@ -24,14 +24,14 @@ repositories {
 }
 
 dependencies {
-
+    implementation group: 'org.apache.velocity', name: 'velocity', version: '1.7'
 }
 
 intellij {
     plugins = ['java']
-    version = '2021.1.3'
-    type 'IU'
-    sandboxDirectory System.getProperty("user.home") + "/idea-plugins-sandbox"
+    version = '2022.2'
+    type = "IU"
+    sandboxDir = System.getProperty("user.home") + "/idea-plugins-sandbox"
     updateSinceUntilBuild = false
     downloadSources = true
 }
@@ -41,5 +41,5 @@ runIde {
 }
 
 buildSearchableOptions {
-    enabled = false
+    enabled = true
 }

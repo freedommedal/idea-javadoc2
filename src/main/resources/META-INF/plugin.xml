@@ -3,7 +3,7 @@
     <name>Javadoc2</name>
     <category>Code tools</category>
     <vendor email="freedemmedal@gmail.com" url="https://github.com/freedommedal">tiankuo</vendor>
-    <idea-version since-build="211"/>
+    <idea-version since-build="222"/>
     <description><![CDATA[
       <p>In java classes, member variables, methods, quickly generate Java comments.
       In the editor, select Java classes, member variables, methods and other elements, right-click the menu,
@@ -15,6 +15,10 @@
       <p>详细文档请访问 <a href="https://doc.sgota.com/docs/idea-javadoc2">https://doc.sgota.com/docs/idea-javadoc2</a> </p>
     ]]></description>
     <change-notes><![CDATA[
+        <ul>2.1.0
+            <li>Compatible with versions 2022.2 to 2023.2</li>
+            <li>兼容2022.2~2023.2版本</li>
+        </ul>
         <ul>2.0.0
             <li>Refactoring the code</li>
             <li>重构代码</li>
