@@ -134,6 +134,11 @@ public class JavaDocUtils {
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (PsiElement psiElement : psiElementList) {
+            String eleText = psiElement.getText();
+            if (!eleText.isEmpty() && eleText.charAt(0) != ' '
+                    && !stringBuilder.isEmpty() && stringBuilder.charAt(stringBuilder.length() - 1) != ' ') {
+                stringBuilder.append(" ");
+            }
             stringBuilder.append(psiElement.getText());
         }
         descriptions.add(stringBuilder.toString());
