@@ -15,6 +15,11 @@ java {
     targetCompatibility JavaVersion.VERSION_17
 }
 
+tasks.withType(JavaCompile.class).configureEach(task -> {
+    task.getOptions().setEncoding("UTF-8");
+});
+
+
 group 'com.sgota.plugin.idea'
 version '2.1.0'
 
