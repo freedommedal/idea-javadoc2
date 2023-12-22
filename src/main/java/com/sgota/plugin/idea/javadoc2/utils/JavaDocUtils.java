@@ -9,6 +9,7 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.sgota.plugin.idea.javadoc2.model.JavaDoc;
 import com.sgota.plugin.idea.javadoc2.model.JavaDocTag;
+import com.sgota.plugin.idea.javadoc2.model.JavaDocType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,12 +29,13 @@ public class JavaDocUtils {
      * createJavaDoc
      *
      * @param psiDocComment psiDocComment
-     * @return java doc
+     * @param javaDocType   javaDocType
+     * @return javadoc
      */
-    public static JavaDoc createJavaDoc(PsiDocComment psiDocComment) {
+    public static JavaDoc createJavaDoc(PsiDocComment psiDocComment, JavaDocType javaDocType) {
         List<String> descriptions = findDescriptions(psiDocComment);
         Map<String, List<JavaDocTag>> tags = findTags(psiDocComment);
-        return new JavaDoc(descriptions, tags);
+        return new JavaDoc(descriptions, tags, javaDocType);
     }
 
     /**
@@ -129,16 +131,9 @@ public class JavaDocUtils {
             removeValueIfAssignableType(docTagRefParam, PsiDocParamRef.class, iterator, psiElement);
             removeValueIfAssignableType(docTagValue, PsiDocTagValueImpl.class, iterator, psiElement);
         }
-        StringBuilder stringBuilder = new StringBuilder();
         for (PsiElement psiElement : psiElementList) {
-            String eleText = psiElement.getText();
-            if (!eleText.isEmpty() && eleText.charAt(0) != ' '
-                    && !stringBuilder.isEmpty() && stringBuilder.charAt(stringBuilder.length() - 1) != ' ') {
-                stringBuilder.append(" ");
-            }
-            stringBuilder.append(psiElement.getText());
+            descriptions.add(psiElement.getText());
         }
-        descriptions.add(stringBuilder.toString());
         return descriptions;
     }
 
@@ -151,9 +146,9 @@ public class JavaDocUtils {
     /**
      * Merge java docs.
      *
-     * @param oldJavaDoc the Old java doc
-     * @param newJavaDoc the New java doc
-     * @return the Java doc
+     * @param oldJavaDoc  the Old java doc
+     * @param newJavaDoc  the New java doc
+     * @return theJava doc
      */
     public static JavaDoc mergeJavaDocs(JavaDoc oldJavaDoc, JavaDoc newJavaDoc) {
         List<String> descriptions = oldJavaDoc.getDescriptions();
@@ -196,7 +191,7 @@ public class JavaDocUtils {
                 tags.put(name, entry.getValue());
             }
         }
-        return new JavaDoc(descriptions, tags);
+        return new JavaDoc(descriptions, tags, oldJavaDoc.getDocType() != null ? oldJavaDoc.getDocType() : newJavaDoc.getDocType());
     }
 
     /**

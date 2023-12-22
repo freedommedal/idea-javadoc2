@@ -12,16 +12,19 @@ public class JavaDoc {
 
     private final List<String> descriptions;
     private final Map<String, List<JavaDocTag>> tags;
+    private JavaDocType docType;
 
     /**
      * Instantiates a new Java doc.
      *
      * @param descriptions the Description
      * @param tags         the Tags
+     * @param javaDocType  javaDocType
      */
-    public JavaDoc(List<String> descriptions, Map<String, List<JavaDocTag>> tags) {
+    public JavaDoc(List<String> descriptions, Map<String, List<JavaDocTag>> tags, JavaDocType javaDocType) {
         this.descriptions = descriptions;
         this.tags = tags;
+        this.docType = javaDocType;
     }
 
     /**
@@ -41,4 +44,14 @@ public class JavaDoc {
     public Map<String, List<JavaDocTag>> getTags() {
         return tags;
     }
+
+    /**
+     * Get the docType
+     *
+     * @return the docType
+     */
+    public JavaDocType getDocType() {
+        return docType;
+    }
+
 }
