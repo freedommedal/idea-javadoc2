@@ -35,13 +35,13 @@ public abstract class AbstractJavaDocGenerator implements JavaDocGenerator {
     public PsiDocComment generate(PsiElement psiElement) {
         PsiDocComment result = null;
         JavaDoc newJavaDoc = createJavaDoc(psiElement);
-        PsiElement firstElement = psiElement.getFirstChild();
-        if (firstElement instanceof PsiDocComment) {
-            PsiDocComment oldDocComment = (PsiDocComment) firstElement;
-            JavaDoc oldJavaDoc = JavaDocUtils.createJavaDoc(oldDocComment, newJavaDoc.getDocType());
-            newJavaDoc = JavaDocUtils.mergeJavaDocs(oldJavaDoc, newJavaDoc);
-        }
         if (newJavaDoc != null) {
+            PsiElement firstElement = psiElement.getFirstChild();
+            if (firstElement instanceof PsiDocComment) {
+                PsiDocComment oldDocComment = (PsiDocComment) firstElement;
+                JavaDoc oldJavaDoc = JavaDocUtils.createJavaDoc(oldDocComment, newJavaDoc.getDocType());
+                newJavaDoc = JavaDocUtils.mergeJavaDocs(oldJavaDoc, newJavaDoc);
+            }
             JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
             String docText = javaDocBuilder.createDefaultJavaDoc(newJavaDoc).build();
             result = psiElementFactory.createDocCommentFromText(docText);

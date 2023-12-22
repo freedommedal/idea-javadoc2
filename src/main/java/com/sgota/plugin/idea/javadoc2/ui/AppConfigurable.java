@@ -3,8 +3,10 @@ package com.sgota.plugin.idea.javadoc2.ui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
@@ -16,6 +18,9 @@ import com.sgota.plugin.idea.javadoc2.ui.model.TemplateVo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,6 +95,44 @@ public class AppConfigurable implements Configurable {
         templateSettingPanel.add(methodSettingPanel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 
         tabbedPane.addTab("注释模板设置", templateSettingPanel);
+        tabbedPane.addTab("使用说明", this.createGuideComponent());
+    }
+
+    /**
+     * createGuideComponent
+     *
+     * @return JComponent
+     */
+    protected JComponent createGuideComponent() {
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setContentType("text/html"); // 设置内容类型为 HTML
+        // HTML 代码
+        String htmlContent = this.readGuideContent();
+        // 设置 HTML 内容
+        editorPane.setText(htmlContent);
+        // 设置为只读
+        editorPane.setEditable(false);
+        // 放入 JScrollPane，以便支持滚动
+        return new JBScrollPane(editorPane);
+    }
+
+    /**
+     * 读取文件内容
+     *
+     * @return String
+     */
+    private String readGuideContent() {
+        String filePath = "guide.html";
+        try (InputStream inputStream = AppConfigurable.class.getResourceAsStream("/".concat(filePath))) {
+            if (inputStream != null) {
+                byte[] bytes = FileUtil.loadBytes(inputStream);
+                return new String(bytes, StandardCharsets.UTF_8);
+            } else {
+                return "file not found: " + filePath;
+            }
+        } catch (IOException e) {
+            return "read file exception: " + filePath;
+        }
     }
 
     @Override

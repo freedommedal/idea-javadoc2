@@ -126,12 +126,6 @@ public class JavaDocBuilder {
                 addNewLine();
             }
             stringBuilder.append(description);
-//            if (StringUtils.isNotBlank(description)) {
-//                if (i != 0) {
-//                    addNewLine();
-//                }
-//                stringBuilder.append(description);
-//            }
         }
         return this;
     }

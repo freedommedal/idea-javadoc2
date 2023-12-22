@@ -34,7 +34,7 @@
             <action id="com.sgota.plugin.idea.javadoc2.action.JavaDocGenerateActionOnEditor"
                     class="com.sgota.plugin.idea.javadoc2.action.JavaDocGenerateAction"
                     text="当前元素生成Java注释">
-                <keyboard-shortcut keymap="$default" first-keystroke="alt shift J"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt O"/>
             </action>
             <action id="com.sgota.plugin.idea.javadoc2.action.JavaDocRemoveActionOnEditor"
                     class="com.sgota.plugin.idea.javadoc2.action.JavaDocRemoveAction"
