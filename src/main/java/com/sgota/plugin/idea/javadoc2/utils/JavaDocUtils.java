@@ -1,5 +1,6 @@
 package com.sgota.plugin.idea.javadoc2.utils;
 
+import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.javadoc.PsiDocMethodOrFieldRef;
 import com.intellij.psi.impl.source.javadoc.PsiDocParamRef;
@@ -146,8 +147,8 @@ public class JavaDocUtils {
     /**
      * Merge java docs.
      *
-     * @param oldJavaDoc  the Old java doc
-     * @param newJavaDoc  the New java doc
+     * @param oldJavaDoc the Old java doc
+     * @param newJavaDoc the New java doc
      * @return theJava doc
      */
     public static JavaDoc mergeJavaDocs(JavaDoc oldJavaDoc, JavaDoc newJavaDoc) {
@@ -187,6 +188,9 @@ public class JavaDocUtils {
         }
         for (Entry<String, List<JavaDocTag>> entry : oldTags.entrySet()) {
             String name = entry.getKey();
+            // 除了param、throws、return之外的其他自定义tag，保留
+            processedTagNames.addAll(MERGE_TAG_NAMES);
+            processedTagNames.add("return");
             if (!processedTagNames.contains(name)) {
                 tags.put(name, entry.getValue());
             }
