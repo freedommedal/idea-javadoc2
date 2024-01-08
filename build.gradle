@@ -7,7 +7,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id "org.jetbrains.intellij" version "1.15.0"
+    id "org.jetbrains.intellij" version "1.16.1"
 }
 
 java {
@@ -15,8 +15,13 @@ java {
     targetCompatibility JavaVersion.VERSION_17
 }
 
+tasks.withType(JavaCompile.class).configureEach(task -> {
+    task.getOptions().setEncoding("UTF-8");
+});
+
+
 group 'com.sgota.plugin.idea'
-version '2.1.0'
+version '2.2.0'
 
 repositories {
     mavenCentral()

@@ -1,5 +1,6 @@
 package com.sgota.plugin.idea.javadoc2.service;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ClassLoaderUtil;
 import com.intellij.psi.*;
 import com.sgota.plugin.idea.javadoc2.exception.GenerateException;
@@ -10,7 +11,13 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 
 import java.io.StringWriter;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -147,9 +154,10 @@ public class JavaDocTemplateService {
         return builder.toString();
     }
 
-    public String mergeToString(Template template, Map<String, Object> model) {
+    public String mergeToString(Template template, Map<String, Object> model, Project project) {
         StringWriter writer = new StringWriter();
         try {
+            this.putCommonVariables(model, project);
             VelocityContext velocityContext = new VelocityContext(model);
             template.merge(velocityContext, writer);
             return writer.toString();
@@ -157,4 +165,34 @@ public class JavaDocTemplateService {
             throw new GenerateException(e);
         }
     }
+
+    public void putCommonVariables(Map<String, Object> model, Project project) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dateTime = currentDateTime.format(formatter);
+        String[] temp = dateTime.split(" ");
+        String date = temp[0];
+        String time = temp[1];
+        DayOfWeek dayOfWeek = currentDateTime.getDayOfWeek();
+        String week = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.CHINESE);
+        String weekEn = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String user = System.getProperty("user.name");
+        String projectName = project.getName();
+
+        model.putIfAbsent("PROJECT_NAME", projectName);
+        model.putIfAbsent("USER", user);
+        model.putIfAbsent("DATETIME", dateTime);
+        model.putIfAbsent("DATE", date);
+        model.putIfAbsent("TIME", time);
+        model.putIfAbsent("WEEK", week);
+        model.putIfAbsent("WEEK_EN", weekEn);
+        model.putIfAbsent("YEAR", currentDateTime.getYear());
+        model.putIfAbsent("MONTH", currentDateTime.getMonthValue());
+        model.putIfAbsent("MONTH_EN", currentDateTime.getMonth());
+        model.putIfAbsent("DAY", currentDateTime.getDayOfMonth());
+        model.putIfAbsent("HOUR", currentDateTime.getHour());
+        model.putIfAbsent("MINUTE", currentDateTime.getMinute());
+        model.putIfAbsent("SECOND", currentDateTime.getSecond());
+    }
+
 }

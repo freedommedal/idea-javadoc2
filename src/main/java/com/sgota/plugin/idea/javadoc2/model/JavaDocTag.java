@@ -9,8 +9,17 @@ import java.util.List;
  */
 public class JavaDocTag {
 
+    /**
+     * 对应PsiDocParamRef
+     */
     private final String refParam;
+    /**
+     * 对应PsiDocTagValueImpl
+     */
     private final String value;
+    /**
+     * 对应PsiDocTokenImpl
+     */
     private final List<String> description;
 
     /**

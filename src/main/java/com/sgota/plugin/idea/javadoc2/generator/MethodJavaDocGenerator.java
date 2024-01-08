@@ -5,6 +5,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiUtil;
 import com.sgota.plugin.idea.javadoc2.model.JavaDoc;
+import com.sgota.plugin.idea.javadoc2.model.JavaDocType;
 import com.sgota.plugin.idea.javadoc2.utils.JavaDocUtils;
 import org.apache.velocity.Template;
 
@@ -65,8 +66,8 @@ public class MethodJavaDocGenerator extends AbstractJavaDocGenerator {
             return map;
         }).collect(Collectors.toList());
         model.put("exceptions", exceptionList);
-        String docText = templateService.mergeToString(template, model);
+        String docText = templateService.mergeToString(template, model, this.getProject());
         PsiDocComment psiDocComment = psiElementFactory.createDocCommentFromText(docText);
-        return JavaDocUtils.createJavaDoc(psiDocComment);
+        return JavaDocUtils.createJavaDoc(psiDocComment, JavaDocType.METHOD);
     }
 }

@@ -3,6 +3,7 @@ package com.sgota.plugin.idea.javadoc2.utils;
 import com.sgota.plugin.idea.javadoc2.enums.JavaDocElementEnum;
 import com.sgota.plugin.idea.javadoc2.model.JavaDoc;
 import com.sgota.plugin.idea.javadoc2.model.JavaDocTag;
+import com.sgota.plugin.idea.javadoc2.model.JavaDocType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Iterator;
@@ -13,7 +14,7 @@ import java.util.Map.Entry;
 /**
  * The type Java doc builder.
  *
- * @author Sergey Timofiychuk,tiankuo
+ * @author SergeyTimofiychuk, tiankuo
  */
 public class JavaDocBuilder {
 
@@ -27,12 +28,18 @@ public class JavaDocBuilder {
     }
 
     /**
+     * docType
+     */
+    private JavaDocType docType;
+
+    /**
      * Creates the java doc by default rules.
      *
      * @param javadoc the Javadoc
      * @return the Java doc builder
      */
     public JavaDocBuilder createDefaultJavaDoc(JavaDoc javadoc) {
+        this.docType = javadoc.getDocType();
         openJavaDoc();
         addDescription(javadoc.getDescriptions());
         addTags(javadoc.getTags());
@@ -114,12 +121,11 @@ public class JavaDocBuilder {
     public JavaDocBuilder addTagDescription(List<String> descriptions) {
         for (int i = 0; i < descriptions.size(); i++) {
             String description = descriptions.get(i);
-            if (StringUtils.isNotBlank(description)) {
-                if (i != 0) {
-                    addNewLine();
-                }
-                stringBuilder.append(description);
+            // 如果单行tag的最后一个字符是空格，则表示后面还有下一行，进行换行处理
+            if(" ".equals(description) && i == descriptions.size() - 1) {
+                addNewLine();
             }
+            stringBuilder.append(description);
         }
         return this;
     }
@@ -143,7 +149,10 @@ public class JavaDocBuilder {
             stringBuilder.append(tag.getValue());
         }
 
-        stringBuilder.append(JavaDocElementEnum.WHITE_SPACE.getText());
+        // 方法注释tag和description之间有空格，类注释其间没有空格
+        if(this.docType == JavaDocType.METHOD) {
+            stringBuilder.append(JavaDocElementEnum.WHITE_SPACE.getText());
+        }
         addTagDescription(tag.getDescription());
         return this;
     }
@@ -152,7 +161,7 @@ public class JavaDocBuilder {
      * Add tags to javadoc section.
      *
      * @param tags the Tags
-     * @return the Java doc builder
+     * @return theJavadoc builder
      */
     public JavaDocBuilder addTags(Map<String, List<JavaDocTag>> tags) {
         Iterator<Entry<String, List<JavaDocTag>>> iterator = tags.entrySet().iterator();

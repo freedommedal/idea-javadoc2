@@ -1,5 +1,6 @@
 package com.sgota.plugin.idea.javadoc2.utils;
 
+import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.javadoc.PsiDocMethodOrFieldRef;
 import com.intellij.psi.impl.source.javadoc.PsiDocParamRef;
@@ -9,6 +10,7 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.sgota.plugin.idea.javadoc2.model.JavaDoc;
 import com.sgota.plugin.idea.javadoc2.model.JavaDocTag;
+import com.sgota.plugin.idea.javadoc2.model.JavaDocType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,12 +30,13 @@ public class JavaDocUtils {
      * createJavaDoc
      *
      * @param psiDocComment psiDocComment
-     * @return java doc
+     * @param javaDocType   javaDocType
+     * @return javadoc
      */
-    public static JavaDoc createJavaDoc(PsiDocComment psiDocComment) {
+    public static JavaDoc createJavaDoc(PsiDocComment psiDocComment, JavaDocType javaDocType) {
         List<String> descriptions = findDescriptions(psiDocComment);
         Map<String, List<JavaDocTag>> tags = findTags(psiDocComment);
-        return new JavaDoc(descriptions, tags);
+        return new JavaDoc(descriptions, tags, javaDocType);
     }
 
     /**
@@ -78,10 +81,7 @@ public class JavaDocUtils {
      */
     private static JavaDocTag createJavaDocTag(PsiDocTag psiDocTag) {
         String docTagRefParam = findDocTagRefParam(psiDocTag);
-        String docTagValue = null;
-        if (docTagRefParam != null) {
-            docTagValue = findDocTagValue(psiDocTag);
-        }
+        String docTagValue = findDocTagValue(psiDocTag);
         List<String> docTagDescription = findDocTagDescription(psiDocTag, docTagRefParam, docTagValue);
         return new JavaDocTag(docTagRefParam, docTagValue, docTagDescription);
     }
@@ -132,11 +132,9 @@ public class JavaDocUtils {
             removeValueIfAssignableType(docTagRefParam, PsiDocParamRef.class, iterator, psiElement);
             removeValueIfAssignableType(docTagValue, PsiDocTagValueImpl.class, iterator, psiElement);
         }
-        StringBuilder stringBuilder = new StringBuilder();
         for (PsiElement psiElement : psiElementList) {
-            stringBuilder.append(psiElement.getText());
+            descriptions.add(psiElement.getText());
         }
-        descriptions.add(stringBuilder.toString());
         return descriptions;
     }
 
@@ -151,7 +149,7 @@ public class JavaDocUtils {
      *
      * @param oldJavaDoc the Old java doc
      * @param newJavaDoc the New java doc
-     * @return the Java doc
+     * @return theJava doc
      */
     public static JavaDoc mergeJavaDocs(JavaDoc oldJavaDoc, JavaDoc newJavaDoc) {
         List<String> descriptions = oldJavaDoc.getDescriptions();
@@ -190,11 +188,14 @@ public class JavaDocUtils {
         }
         for (Entry<String, List<JavaDocTag>> entry : oldTags.entrySet()) {
             String name = entry.getKey();
+            // 除了param、throws、return之外的其他自定义tag，保留
+            processedTagNames.addAll(MERGE_TAG_NAMES);
+            processedTagNames.add("return");
             if (!processedTagNames.contains(name)) {
                 tags.put(name, entry.getValue());
             }
         }
-        return new JavaDoc(descriptions, tags);
+        return new JavaDoc(descriptions, tags, oldJavaDoc.getDocType() != null ? oldJavaDoc.getDocType() : newJavaDoc.getDocType());
     }
 
     /**

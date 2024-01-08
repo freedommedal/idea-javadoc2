@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sgota.plugin.idea.javadoc2.model.JavaDoc;
+import com.sgota.plugin.idea.javadoc2.model.JavaDocType;
 import com.sgota.plugin.idea.javadoc2.service.JavaDocTemplateService;
 import com.sgota.plugin.idea.javadoc2.utils.JavaDocUtils;
 import org.apache.velocity.Template;
@@ -31,8 +32,8 @@ public class FieldJavaDocGenerator extends AbstractJavaDocGenerator {
         Template template = templateService.getFieldTemplate(psiField);
         Map<String, Object> model = new HashMap<>();
         model.put("fieldName", psiField.getName());
-        String docText = templateService.mergeToString(template, model);
+        String docText = templateService.mergeToString(template, model, this.getProject());
         PsiDocComment psiDocComment = psiElementFactory.createDocCommentFromText(docText);
-        return JavaDocUtils.createJavaDoc(psiDocComment);
+        return JavaDocUtils.createJavaDoc(psiDocComment, JavaDocType.FIELD);
     }
 }
