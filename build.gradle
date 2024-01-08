@@ -15,10 +15,9 @@ java {
     targetCompatibility JavaVersion.VERSION_17
 }
 
-tasks.withType(JavaCompile.class).configureEach(task -> {
-    task.getOptions().setEncoding("UTF-8");
-});
-
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
 
 group 'com.sgota.plugin.idea'
 version '2.2.0'
@@ -34,7 +33,7 @@ dependencies {
 
 intellij {
     plugins = ['java']
-    version = '2022.2'
+    version = '2023.2'
     type = "IU"
     sandboxDir = System.getProperty("user.home") + "/idea-plugins-sandbox"
     updateSinceUntilBuild = false

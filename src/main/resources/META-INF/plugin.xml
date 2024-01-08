@@ -3,7 +3,7 @@
     <name>Javadoc2</name>
     <category>Code tools</category>
     <vendor email="freedemmedal@gmail.com" url="https://github.com/freedommedal">tiankuo</vendor>
-    <idea-version since-build="222"/>
+    <idea-version since-build="223"/>
     <description><![CDATA[
       <p>In java classes, member variables, methods, quickly generate Java comments.
       In the editor, select Java classes, member variables, methods and other elements, right-click the menu,
@@ -15,6 +15,10 @@
       <p>详细文档请访问 <a href="https://doc.sgota.com/docs/idea-javadoc2">https://doc.sgota.com/docs/idea-javadoc2</a> </p>
     ]]></description>
     <change-notes><![CDATA[
+        <ul>2.2.0
+            <li>Fixed bugs, added extended variables,Compatible with versions 2022.3 to 2023.2</li>
+            <li>修正错误,增加扩展变量,兼容2022.3~2023.2版本</li>
+        </ul>
         <ul>2.1.0
             <li>Compatible with versions 2022.2 to 2023.2</li>
             <li>兼容2022.2~2023.2版本</li>
@@ -34,7 +38,7 @@
             <action id="com.sgota.plugin.idea.javadoc2.action.JavaDocGenerateActionOnEditor"
                     class="com.sgota.plugin.idea.javadoc2.action.JavaDocGenerateAction"
                     text="当前元素生成Java注释">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt O"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift J"/>
             </action>
             <action id="com.sgota.plugin.idea.javadoc2.action.JavaDocRemoveActionOnEditor"
                     class="com.sgota.plugin.idea.javadoc2.action.JavaDocRemoveAction"
